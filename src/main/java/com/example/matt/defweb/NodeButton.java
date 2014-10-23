@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.Button;
 
 /**
- * Created by Matt on 08/09/2014.
+ * Created by Matt on 08/09/2014. Node button is button with extra data storage associated
  */
 public class NodeButton extends Button {
     private String[] nodeParents;

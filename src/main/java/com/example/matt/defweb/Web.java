@@ -1,24 +1,17 @@
 package com.example.matt.defweb;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.SearchManager;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 public class Web extends Activity {
 
@@ -32,7 +25,6 @@ public class Web extends Activity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,7 +58,7 @@ public class Web extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_web, container, false);
-            RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
+            //RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
 
             ListView listview = (ListView)rootView.findViewById(R.id.main_listview);
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
