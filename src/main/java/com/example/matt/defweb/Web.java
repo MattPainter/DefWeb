@@ -9,9 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Web extends Activity {
 
@@ -71,7 +75,18 @@ public class Web extends Activity {
                 @Override //submits search via button now does nothing
                 public boolean onQueryTextSubmit(String query) {
                     SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
+                    ListView listView = (ListView)getActivity().findViewById(R.id.main_listview);
+                    ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>)listView.getAdapter();
+                    List<String> stringList = new ArrayList<String>();
 
+                    for (int i = 0; i < arrayAdapter1.getCount(); i++) {
+                        String s = arrayAdapter1.getItem(i);
+                        if (s.toLowerCase().contains(query.trim())) {
+                            stringList.add(s);
+                        }
+                    }
+
+                    arrayAdapter1.clear(); arrayAdapter1.addAll(stringList);
                     return true;
                 }
 
@@ -80,9 +95,6 @@ public class Web extends Activity {
                     return false;
                 }//interesting
             });
-
-
-
             return rootView;
         }
     }
