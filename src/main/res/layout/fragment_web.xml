@@ -16,13 +16,13 @@
         android:iconifiedByDefault="false"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-
         />
 
     <ListView
         android:id="@+id/main_listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_below="@id/searchView">
 
     </ListView>
 

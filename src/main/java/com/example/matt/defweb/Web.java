@@ -9,9 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -72,9 +70,9 @@ public class Web extends Activity {
             //manages the search view - sends data to search activity test
             SearchView searchView = (SearchView)rootView.findViewById(R.id.searchView);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override //submits search via button now does nothing
+                @Override //submits search via button now searches listview
                 public boolean onQueryTextSubmit(String query) {
-                    SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
+                    //SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
                     ListView listView = (ListView)getActivity().findViewById(R.id.main_listview);
                     ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>)listView.getAdapter();
                     List<String> stringList = new ArrayList<String>();
@@ -99,6 +97,12 @@ public class Web extends Activity {
         }
     }
 
+    private List<String> performSearch(String query) {
+        List<String> stringList = new ArrayList<String>();
+
+        return null;
+    }
+
     @Override
     public boolean onSearchRequested() {
 
@@ -106,6 +110,9 @@ public class Web extends Activity {
     }
 
 }
+
+//TODO: Create class to handle storing of images - probably need images for Latex stuff rather than render latex on fly
+//TODO: Rename package
 
 /*  SPAWNS NEW SEARCH ACTIVITY WITH LIST VIEW
                     SearchView s = (SearchView)getActivity().findViewById(R.id.searchView);
