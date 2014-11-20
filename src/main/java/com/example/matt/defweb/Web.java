@@ -2,6 +2,7 @@ package com.example.matt.defweb;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,102 +13,177 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Web extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new WebFragment())
-                    .commit();
-        }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_web);
+    if (savedInstanceState == null) {
+      getFragmentManager().beginTransaction()
+          .add(R.id.container, new WebFragment())
+          .commit();
+    }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.web, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_refresh) {
+      refreshListView();
+      return true;
+    } else if (id == R.id.action_clear_database) {
+      clearDatabase();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * A placeholder fragment containing a simple view.
+   */
+  public static class WebFragment extends Fragment {
+    private DefDataSource dataSource;
+
+    public WebFragment() {
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.web, menu);
-        return true;
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+      View rootView = inflater.inflate(R.layout.fragment_web, container, false);
+      //RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
+      dataSource = new DefDataSource(getActivity());
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+      try {
+        dataSource.open();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class WebFragment extends Fragment {
+      ListView listview = (ListView) rootView.findViewById(R.id.main_listview);
+      ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
 
-        public WebFragment() {
+      List<Definition> definitionList = dataSource.getAllDefinitions();
+      for (Definition definition : definitionList) {
+        arrayAdapter.add(definition.getDefName());
+      }
 
+      listview.setAdapter(arrayAdapter);
+
+      //manages the search view - sends data to search activity test
+      SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
+      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override //submits search via button now searches listview
+        public boolean onQueryTextSubmit(String query) {
+          dataSource = new DefDataSource(getActivity());
+
+          try {
+            dataSource.open();
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+
+          //SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
+          ListView listView = (ListView) getActivity().findViewById(R.id.main_listview);
+          List<Definition> definitionList1 = dataSource.getAllDefinitions();
+          List<String> stringList = new ArrayList<String>();
+          ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>) listView.getAdapter();
+
+          for (Definition definition : definitionList1) {
+            if (definition.getDefName().toLowerCase().contains(query)) {
+              stringList.add(definition.getDefName());
+            }
+          }
+
+          arrayAdapter1.clear();
+          arrayAdapter1.addAll(stringList);
+          dataSource.close();
+          return true;
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_web, container, false);
-            //RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
+        public boolean onQueryTextChange(String s) {
+          return false;
+        }//interesting
+      });
+      return rootView;
+    }
+  }
 
-            ListView listview = (ListView)rootView.findViewById(R.id.main_listview);
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-            arrayAdapter.addAll(getResources().getStringArray(R.array.test_array));
-            listview.setAdapter(arrayAdapter);
+  public void addDefinition(MenuItem item) {
+    Intent addDefIntent = new Intent(this, AddDefinitionActivity.class);
+    startActivity(addDefIntent);
+  }
 
-            //manages the search view - sends data to search activity test
-            SearchView searchView = (SearchView)rootView.findViewById(R.id.searchView);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override //submits search via button now searches listview
-                public boolean onQueryTextSubmit(String query) {
-                    //SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
-                    ListView listView = (ListView)getActivity().findViewById(R.id.main_listview);
-                    ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>)listView.getAdapter();
-                    List<String> stringList = new ArrayList<String>();
+  private List<String> performSearch(String query) {
+    List<String> stringList = new ArrayList<String>();
 
-                    for (int i = 0; i < arrayAdapter1.getCount(); i++) {
-                        String s = arrayAdapter1.getItem(i);
-                        if (s.toLowerCase().contains(query.trim())) {
-                            stringList.add(s);
-                        }
-                    }
+    return null;
+  }
 
-                    arrayAdapter1.clear(); arrayAdapter1.addAll(stringList);
-                    return true;
-                }
+  private void refreshListView() {
+    ListView listView = (ListView) findViewById(R.id.main_listview);
+    ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) listView.getAdapter();
+    arrayAdapter.clear();
 
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    return false;
-                }//interesting
-            });
-            return rootView;
-        }
+    DefDataSource dataSource = new DefDataSource(this);
+
+    try {
+      dataSource.open();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
 
-    private List<String> performSearch(String query) {
-        List<String> stringList = new ArrayList<String>();
-
-        return null;
+    List<Definition> definitions = dataSource.getAllDefinitions();
+    for (Definition d : definitions) {
+      arrayAdapter.add(d.getDefName());
     }
 
-    @Override
-    public boolean onSearchRequested() {
+    arrayAdapter.notifyDataSetChanged();
 
-        return true;
+    dataSource.close();
+  }
+
+  private void clearDatabase() {
+    DefDataSource dataSource = new DefDataSource(this);
+
+    try {
+      dataSource.open();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
+
+    List<Definition> definitions = dataSource.getAllDefinitions();
+    for (Definition d : definitions) {
+      dataSource.deleteDefinition(d);
+    }
+
+    dataSource.close();
+
+    refreshListView();
+  }
+
+  @Override
+  public boolean onSearchRequested() {
+
+    return true;
+  }
 
 }
 

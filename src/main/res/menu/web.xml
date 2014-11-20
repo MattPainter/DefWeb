@@ -1,6 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Web" >
+    <item android:id="@+id/action_add_def"
+        android:title="Add Definition"
+        android:icon="@drawable/ic_note_add_white_36dp"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"
+        android:onClick="addDefinition"/>
+
+    <item android:id="@+id/action_refresh"
+        android:title="Refresh"
+        android:orderInCategory="2"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_clear_database"
+        android:title="Clear DB"
+        android:orderInCategory="3"
+        android:showAsAction="never" />
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
