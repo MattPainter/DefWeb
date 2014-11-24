@@ -10,6 +10,10 @@ import android.widget.ArrayAdapter;
 
 import com.android.matt.defWeb.R;
 
+/*
+  Class no longer required
+ */
+
 public class searchActivity extends ListActivity {
 
     @Override

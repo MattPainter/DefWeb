@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
  * Class to help manage data in database
  */
 public class DefDataSource {
+  /* internal variables and columns array*/
   private SQLiteDatabase database;
   private DatabaseHelper dbHelper;
   private String allColumns[] = {DatabaseHelper.COLUMN_ID,
@@ -32,19 +34,21 @@ public class DefDataSource {
     dbHelper.close();
   }
 
+  /* Method adds a definition to database defined by two strings */
   public Definition createDefinition(String defName, String imgLoc) {
-    //set up content values - looks like row of database
+    /* Set up content values - looks like row of database */
     ContentValues values = new ContentValues();
     values.put(DatabaseHelper.COLUMN_NAME_TEXT, defName);
     values.put(DatabaseHelper.COLUMN_IMG_LOC, imgLoc);
 
-    //insert the content values and get cursor to this new row
+    /* Insert the content values and get cursor to this new row */
     long insertId = database.insert(DatabaseHelper.TABLE_NAME, null, values);
     Cursor cursor = database.query(DatabaseHelper.TABLE_NAME,
         allColumns,
         DatabaseHelper.COLUMN_ID + " = " + insertId,
         null, null, null, null);
-    //get and return definition
+
+    /* Get and return definition */
     cursor.moveToFirst();
     Definition definition = cursorToDef(cursor);
     cursor.close();
@@ -52,18 +56,20 @@ public class DefDataSource {
     return definition;
   }
 
+  /* Method adds an already created definition to database*/
   public Definition createDefinition(Definition definition) {
     ContentValues values = new ContentValues();
     values.put(DatabaseHelper.COLUMN_NAME_TEXT, definition.getDefName());
     values.put(DatabaseHelper.COLUMN_IMG_LOC, definition.getImgLoc());
 
-    //insert the content values and get cursor to this new row
+    /* Insert the content values and get cursor to this new row */
     long insertId = database.insert(DatabaseHelper.TABLE_NAME, null, values);
     Cursor cursor = database.query(DatabaseHelper.TABLE_NAME,
         allColumns,
         DatabaseHelper.COLUMN_ID + " = " + insertId,
         null, null, null, null);
-    //get and return definition
+
+    /* Get and return definition */
     cursor.moveToFirst();
     Definition def = cursorToDef(cursor);
     cursor.close();
@@ -71,6 +77,7 @@ public class DefDataSource {
     return def;
   }
 
+  /* Method deletes a definition from database */
   public void deleteDefinition(Definition def) {
     long id = def.getId();
     System.out.println("Definition deleted with id: " + id);
@@ -78,13 +85,13 @@ public class DefDataSource {
   }
 
   public List<Definition> getAllDefinitions() {
-    //create array list and get cursor to first row
+    /* Create array list and get cursor to first row */
     List<Definition> definitions = new ArrayList<Definition>();
     Cursor cursor = database.query(DatabaseHelper.TABLE_NAME,
         allColumns, null, null, null, null, null);
     cursor.moveToFirst();
 
-    //loops through rows and adds definitions to list
+    /* Loops through rows and adds definitions to list */
     while (!cursor.isAfterLast()) {
       Definition def = cursorToDef(cursor);
       definitions.add(def);
@@ -94,8 +101,13 @@ public class DefDataSource {
     return definitions;
   }
 
+  /* Method sends request to helper to drop and remake the table - clears all entries*/
+  public void dropAndRemakeTable() {
+    dbHelper.dropAndRemakeTable(database);
+  }
+
   private Definition cursorToDef(Cursor cursor) {
-    //moves values of columns to appropriate places in definition object
+    /* Moves values of columns to appropriate places in definition object */
     Definition definition = new Definition();
     definition.setId(cursor.getLong(0));
     definition.setDefName(cursor.getString(1));

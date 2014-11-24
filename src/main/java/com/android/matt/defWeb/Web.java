@@ -24,6 +24,7 @@ public class Web extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    /* Sets layout and adds WebFragment*/
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_web);
     if (savedInstanceState == null) {
@@ -35,16 +36,18 @@ public class Web extends Activity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
+    /* Inflate the menu; this adds items to the action bar if it is present. */
     getMenuInflater().inflate(R.menu.web, menu);
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
+    /*
+     Handles menu presses of refresh and clear
+     Refresh - refresh the listview items
+     Clear - deletes the database via explicit deletions not dropping
+    */
     int id = item.getItemId();
     if (id == R.id.action_refresh) {
       refreshListView();
@@ -70,7 +73,6 @@ public class Web extends Activity {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
       View rootView = inflater.inflate(R.layout.fragment_web, container, false);
-      //RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
       /* Define data source to connect to DB later*/
       dataSource = new DefDataSource(getActivity());
 
@@ -93,31 +95,36 @@ public class Web extends Activity {
 
       listview.setAdapter(arrayAdapter);
 
-      //manages the search view - sends data to search activity test
+      /* Manages the searching of data -
+        listens for submission of query then searches by it
+        results sent to listview
+      */
       SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
         @Override //submits search via button now searches listview //TODO: refresh DB and then search listview
         public boolean onQueryTextSubmit(String query) {
-          dataSource = new DefDataSource(getActivity());
 
+          dataSource = new DefDataSource(getActivity());
           try {
             dataSource.open();
           } catch (SQLException e) {
             e.printStackTrace();
           }
 
-          //SearchView searchView1 = (SearchView)getActivity().findViewById(R.id.searchView);
+          /* Gets list of definitions and adapter to list view*/
           ListView listView = (ListView) getActivity().findViewById(R.id.main_listview);
           List<Definition> definitionList1 = dataSource.getAllDefinitions();
           List<String> stringList = new ArrayList<String>();
           ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>) listView.getAdapter();
 
+          /* Searches for matches linearly */
           for (Definition definition : definitionList1) {
             if (definition.getDefName().toLowerCase().contains(query)) {
               stringList.add(definition.getDefName());
             }
           }
 
+          /* Clean up */
           arrayAdapter1.clear();
           arrayAdapter1.addAll(stringList);
           dataSource.close();
@@ -133,39 +140,34 @@ public class Web extends Activity {
     }
   }
 
+  /* Shows activity to add definition */
   public void addDefinition(MenuItem item) {
     Intent addDefIntent = new Intent(this, AddDefinitionActivity.class);
     startActivity(addDefIntent);
   }
 
-/*
-  private List<String> performSearch(String query) {
-    List<String> stringList = new ArrayList<String>();
-
-    return null;
-  }*/
-
   /* Function connects to DB and sends all definitions to listview */
   private void refreshListView() {
+    /* Gets adapter to listview */
     ListView listView = (ListView) findViewById(R.id.main_listview);
     ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) listView.getAdapter();
     arrayAdapter.clear();
 
+    /* Set up data source to access database*/
     DefDataSource dataSource = new DefDataSource(this);
-
     try {
       dataSource.open();
     } catch (SQLException e) {
       e.printStackTrace();
     }
 
+    /* Adds definitions to adapter */
     List<Definition> definitions = dataSource.getAllDefinitions();
     for (Definition d : definitions) {
       arrayAdapter.add(d.getDefName());
     }
 
-    arrayAdapter.notifyDataSetChanged();
-
+    arrayAdapter.notifyDataSetChanged(); //necessary?
     dataSource.close();
   }
 
@@ -179,10 +181,7 @@ public class Web extends Activity {
       e.printStackTrace();
     }
 
-    List<Definition> definitions = dataSource.getAllDefinitions();
-    for (Definition d : definitions) {
-      dataSource.deleteDefinition(d);
-    }
+    dataSource.dropAndRemakeTable();
 
     dataSource.close();
 
@@ -199,60 +198,3 @@ public class Web extends Activity {
 
 //TODO: Create class to handle storing of images - probably need images for Latex stuff rather than render latex on fly
 //TODO: Rename package
-
-/*  SPAWNS NEW SEARCH ACTIVITY WITH LIST VIEW
-                    SearchView s = (SearchView)getActivity().findViewById(R.id.searchView);
-                    Intent searchActivity = new Intent(getActivity(), searchActivity.class);
-                    Toast.makeText(getActivity(), "TEST", Toast.LENGTH_SHORT).show();
-                    searchActivity.putExtra(SearchManager.QUERY, s.getQuery().toString().toLowerCase());
-                    startActivity(searchActivity);*/
-
-/* PROGRAMATICALLY CREATES BUTTON
-            //creates view button an d moves it to bottom
-            NodeButton b = new NodeButton(getActivity());
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            relativeParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            b.setLayoutParams(relativeParams);
-            //b.setBackgroundColor(getResources().getColor(android.R.color.holo_purple)); //this resets the background resource
-            b.setBackgroundResource(R.drawable.oval_shape);
-            b.setText("TEST");
-            //searches on click
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override //alt way of launching search activity
-                public void onClick(View view) {
-                    SearchView s = (SearchView)getActivity().findViewById(R.id.searchView);
-                    Intent searchActivity = new Intent(getActivity(), searchActivity.class);
-
-                    searchActivity.putExtra(SearchManager.QUERY, s.getQuery().toString().toLowerCase());
-                    startActivity(searchActivity);
-                }
-            });
-            //adds button to view
-            main.addView(b, relativeParams);
-*/
-
-/** THIS WORKS
- *       public View onCreateView(LayoutInflater inflater, ViewGroup container,
- *               Bundle savedInstanceState) {
- *           View rootView = inflater.inflate(R.layout.fragment_web, container, false);
- *           RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
- *
- *           NodeButton b = new NodeButton(getActivity());
- *           b.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
- *                                                                   RelativeLayout.LayoutParams.WRAP_CONTENT));
- *           b.setText("Test Text");
- *           b.setNodeData("Here is some node Data");
- *           b.setOnClickListener(new View.OnClickListener() {
- *               @Override
- *               public void onClick(View view) {
- *
- *               }
- *           });
- *           main.addView(b);
- *
- *           return rootView;
- *       }
- *   }
- *
- */

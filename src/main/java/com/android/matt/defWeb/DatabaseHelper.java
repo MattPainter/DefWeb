@@ -11,6 +11,8 @@ import android.util.Log;
  * http://www.vogella.com/tutorials/AndroidSQLite/article.html
  * and here:
  * https://developer.android.com/guide/topics/data/data-storage.html#db
+ *
+ * Mostly appeals to super class SQLiteOpenHelper
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper{
@@ -46,6 +48,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
+
+  /* Method allows for dropping and recreating of table*/
+  public void dropAndRemakeTable(SQLiteDatabase sqLiteDatabase) {
+    Log.w(DatabaseHelper.class.getName(),
+        "Dropping and recreating table " + TABLE_NAME);
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+    onCreate(sqLiteDatabase);
+  }
 }
 
 //TODO: create seperate class for each table - ie analysis, algebra etc
