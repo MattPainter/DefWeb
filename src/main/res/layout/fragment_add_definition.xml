@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.matt.defweb.AddDefinitionActivity$PlaceholderFragment">
+    tools:context="com.android.matt.defWeb.AddDefinitionActivity$PlaceholderFragment">
 
     <EditText
         android:id="@+id/textview_definition_name"
@@ -25,6 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_definition_body"
-        android:onClick="add"/>
+        />
 
 </RelativeLayout>

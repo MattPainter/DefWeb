@@ -1,4 +1,4 @@
-package com.example.matt.defweb;
+package com.android.matt.defWeb;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,14 +15,14 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
     //Define database and table name
-    public static final String DATABASE_NAME = "definitionDatabase.db";
+    private static final String DATABASE_NAME = "definitionDatabase.db";
     public static final String TABLE_NAME = "definitions";
     //Define column names
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME_TEXT = "name";
     public static final String COLUMN_IMG_LOC = "img_loc";
 
-    public static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1;
 
     private static final String CREATE_DATABASE = "CREATE TABLE " + TABLE_NAME +
                                            "(" + COLUMN_ID + " integer primary key autoincrement, " +

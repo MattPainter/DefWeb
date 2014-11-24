@@ -1,4 +1,4 @@
-package com.example.matt.defweb;
+package com.android.matt.defWeb;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,8 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import com.android.matt.defWeb.R;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,7 +48,7 @@ public class Web extends Activity {
     int id = item.getItemId();
     if (id == R.id.action_refresh) {
       refreshListView();
-      return true;
+      return true; //correct to do this?
     } else if (id == R.id.action_clear_database) {
       clearDatabase();
       return true;
@@ -68,17 +71,21 @@ public class Web extends Activity {
                              Bundle savedInstanceState) {
       View rootView = inflater.inflate(R.layout.fragment_web, container, false);
       //RelativeLayout main = (RelativeLayout)rootView.findViewById(R.id.RelativeLayoutMain);
+      /* Define data source to connect to DB later*/
       dataSource = new DefDataSource(getActivity());
 
+      /* Open data base connection */
       try {
         dataSource.open();
       } catch (SQLException e) {
         e.printStackTrace();
       }
 
+      /* Get listview adapter */
       ListView listview = (ListView) rootView.findViewById(R.id.main_listview);
       ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
 
+      /* Get definitions from database and add them to adapter */
       List<Definition> definitionList = dataSource.getAllDefinitions();
       for (Definition definition : definitionList) {
         arrayAdapter.add(definition.getDefName());
@@ -89,7 +96,7 @@ public class Web extends Activity {
       //manages the search view - sends data to search activity test
       SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override //submits search via button now searches listview
+        @Override //submits search via button now searches listview //TODO: refresh DB and then search listview
         public boolean onQueryTextSubmit(String query) {
           dataSource = new DefDataSource(getActivity());
 
@@ -115,7 +122,7 @@ public class Web extends Activity {
           arrayAdapter1.addAll(stringList);
           dataSource.close();
           return true;
-        }
+           }
 
         @Override
         public boolean onQueryTextChange(String s) {
@@ -131,12 +138,14 @@ public class Web extends Activity {
     startActivity(addDefIntent);
   }
 
+/*
   private List<String> performSearch(String query) {
     List<String> stringList = new ArrayList<String>();
 
     return null;
-  }
+  }*/
 
+  /* Function connects to DB and sends all definitions to listview */
   private void refreshListView() {
     ListView listView = (ListView) findViewById(R.id.main_listview);
     ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) listView.getAdapter();
@@ -160,6 +169,7 @@ public class Web extends Activity {
     dataSource.close();
   }
 
+  /* Function deletes all definitions in database*/
   private void clearDatabase() {
     DefDataSource dataSource = new DefDataSource(this);
 

@@ -1,4 +1,4 @@
-package com.example.matt.defweb;
+package com.android.matt.defWeb;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
+import com.android.matt.defWeb.R;
 
 public class searchActivity extends ListActivity {
 

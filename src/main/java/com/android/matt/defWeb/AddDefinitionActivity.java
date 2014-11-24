@@ -1,7 +1,6 @@
-package com.example.matt.defweb;
+package com.android.matt.defWeb;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,14 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.sql.SQLDataException;
+import com.android.matt.defWeb.R;
+
 import java.sql.SQLException;
-import java.util.List;
 
 
 public class AddDefinitionActivity extends Activity {

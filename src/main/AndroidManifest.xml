@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.matt.defweb" >
+    package="com.android.matt.defWeb" >
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.matt.defweb.Web"
+            android:name="com.android.matt.defWeb.Web"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,9 +17,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.matt.defweb.searchActivity"
+            android:name="com.android.matt.defWeb.searchActivity"
             android:label="@string/title_activity_search" >
-            <intent-filter>
+            <intent-filter>ApplicationTest
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -28,7 +28,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.example.matt.defweb.AddDefinitionActivity"
+            android:name="com.android.matt.defWeb.AddDefinitionActivity"
             android:label="@string/title_activity_add_definition" >
         </activity>
     </application>
