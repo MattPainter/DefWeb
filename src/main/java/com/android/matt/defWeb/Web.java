@@ -60,7 +60,7 @@ public class Web extends Activity {
   }
 
   /**
-   * A placeholder fragment containing a simple view.
+   * A fragment containing listview //TODO: rename
    */
   public static class WebFragment extends Fragment {
     private DefDataSource dataSource;
