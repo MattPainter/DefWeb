@@ -12,19 +12,36 @@
         android:layout_height="wrap_content"
         android:hint="Enter definition name"/>
 
-
-    <EditText
-        android:id="@+id/textview_definition_body"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/textview_img_loc"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter body text for definition"
-        android:layout_below="@id/textview_definition_name"/>
+        android:layout_below="@id/textview_definition_name"
+        android:hint="Image location goes here"/>
+
 
     <Button
         android:id="@+id/button_add_definition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_definition_body"
-        />
+
+        android:text="Add"
+        android:layout_below="@+id/textview_img_loc"
+        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@+id/button_capture_img" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Capture Image"
+        android:id="@+id/button_capture_img"
+        android:layout_alignBottom="@+id/button_add_definition" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView_picture_thumbnail"
+        android:layout_below="@+id/button_capture_img"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

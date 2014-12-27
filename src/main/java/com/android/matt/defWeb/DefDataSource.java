@@ -114,4 +114,12 @@ public class DefDataSource {
     definition.setImgLoc(cursor.getString(2));
     return definition;
   }
+
+  /* Simple function to query by definition name */
+  public Definition findDefWithName(String defName) {
+    Cursor cursor = database.query(DatabaseHelper.TABLE_NAME,
+       allColumns , DatabaseHelper.COLUMN_NAME_TEXT + "='" + defName + "'", null, null, null, null);
+    cursor.moveToFirst();
+    return cursorToDef(cursor);
+  }
 }

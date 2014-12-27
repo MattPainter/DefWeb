@@ -16,5 +16,6 @@
     </string-array>
 
     <string name="title_activity_add_definition">AddDefinitionActivity</string>
+    <string name="title_activity_image_viewer">ImageViewer</string>
 
 </resources>

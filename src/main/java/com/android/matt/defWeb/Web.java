@@ -9,10 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.android.matt.defWeb.R;
 
@@ -46,7 +48,8 @@ public class Web extends Activity {
     /*
      Handles menu presses of refresh and clear
      Refresh - refresh the listview items
-     Clear - deletes the database via explicit deletions not dropping
+     Clear - deletes the database via appealing to database helper
+              via DefDataSource to drop the main table
     */
     int id = item.getItemId();
     if (id == R.id.action_refresh) {
@@ -95,7 +98,8 @@ public class Web extends Activity {
 
       listview.setAdapter(arrayAdapter);
 
-      /* Manages the searching of data -
+      /*
+        Manages the searching of data -
         listens for submission of query then searches by it
         results sent to listview
       */
@@ -136,7 +140,19 @@ public class Web extends Activity {
           return false;
         }//interesting
       });
+
+      listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+          String defName = adapterView.getItemAtPosition(i).toString();
+          Definition definition = dataSource.findDefWithName(defName);
+
+          //TODO: view image here
+        }
+      });
+
       return rootView;
+
     }
   }
 
@@ -190,7 +206,6 @@ public class Web extends Activity {
 
   @Override
   public boolean onSearchRequested() {
-
     return true;
   }
 
