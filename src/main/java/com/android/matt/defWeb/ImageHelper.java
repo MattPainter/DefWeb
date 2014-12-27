@@ -31,12 +31,10 @@ public class ImageHelper {
     this.context = context;
   }
 
-  public void sendTakePicIntent() {
+  /* Sends an intent to take a picture stored under the given name and time */
+  public void sendTakePicIntent(String defName) {
     Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     Activity activity = (Activity)this.context;
-
-    String defName = ((EditText) activity.findViewById(R.id.textview_definition_name))
-        .getText().toString();
 
     if (takePicIntent.resolveActivity(activity.getPackageManager()) != null) {
       // Create the File where the photo should go
@@ -62,8 +60,8 @@ public class ImageHelper {
     Activity activity = (Activity)this.context;
 
       /*
-      Creates file of form:
-      JPEG_(definition name)_(time of image capture)_.jpg
+        Creates file of form:
+        JPEG_(definition name)_(time of image capture)_.jpg
       */
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     String imageFileName = "JPEG_" + defName + "_" + timeStamp + "_";
@@ -78,10 +76,11 @@ public class ImageHelper {
       /* Stores a simple path to file */
     mCurrentPhotoPath = image.getPath();
 
-    TextView textview_img_loc = (TextView)activity.findViewById(R.id.textview_img_loc);
-    textview_img_loc.setText(mCurrentPhotoPath);
-
     return image;
+  }
+
+  public String getPhotoPath() {
+    return mCurrentPhotoPath;
   }
 
   public void showThumbnail(ImageView imgView) {

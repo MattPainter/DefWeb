@@ -150,7 +150,12 @@ public class AddDefinitionActivity extends Activity {
         captureImgButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          imageHelper.sendTakePicIntent();
+          String defName = ((EditText) getActivity().findViewById(R.id.textview_definition_name))
+              .getText().toString();
+          imageHelper.sendTakePicIntent(defName);
+              /* Temp stores image loc in text view from here */
+          TextView textview_img_loc = (TextView)getActivity().findViewById(R.id.textview_img_loc);
+          textview_img_loc.setText(imageHelper.getPhotoPath());
         }
       });
 
