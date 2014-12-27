@@ -84,7 +84,7 @@ public class AddDefinitionActivity extends Activity {
           TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
           /* Finds if you have no image location string */
-          if (defBody.toString() != "") {
+          if (defBody.toString().equals("") ) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Add Definition?")
                 .setMessage("Are you sure you want to add this definition?")
