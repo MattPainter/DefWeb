@@ -121,6 +121,8 @@ public class Web extends Activity {
           List<String> stringList = new ArrayList<String>();
           ArrayAdapter<String> arrayAdapter1 = (ArrayAdapter<String>) listView.getAdapter();
 
+          //TODO: store definitions more efficiently and implement better search algo
+
           /* Searches for matches linearly */
           for (Definition definition : definitionList1) {
             if (definition.getDefName().toLowerCase().contains(query)) {

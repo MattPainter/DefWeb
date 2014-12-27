@@ -75,6 +75,8 @@ public class AddDefinitionActivity extends Activity {
       Button captureImgButton = (Button) rootView.findViewById(R.id.button_capture_img);
       imageHelper = new ImageHelper(getActivity());
 
+      //TODO: stop addition of image to db without first adding def body or pic
+
       /* Add on click listener to add button */
       addDefButton.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -84,7 +86,7 @@ public class AddDefinitionActivity extends Activity {
           TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
           /* Finds if you have no image location string */
-          if (defBody.toString().equals("") ) {
+          if (!defBody.toString().equals("")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Add Definition?")
                 .setMessage("Are you sure you want to add this definition?")
@@ -148,7 +150,6 @@ public class AddDefinitionActivity extends Activity {
         captureImgButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          ImageView imageViewThumbnail = (ImageView)getActivity().findViewById(R.id.imageView_picture_thumbnail);
           imageHelper.sendTakePicIntent();
         }
       });
