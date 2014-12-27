@@ -212,6 +212,3 @@ public class Web extends Activity {
   }
 
 }
-
-//TODO: Create class to handle storing of images - probably need images for Latex stuff rather than render latex on fly
-//TODO: Rename package
