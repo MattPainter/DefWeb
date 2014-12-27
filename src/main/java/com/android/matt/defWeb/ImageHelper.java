@@ -19,7 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Matt on 27/12/2014.
+ * Class to help with image methods
+ * Used for operations involving one image
  */
 public class ImageHelper {
   static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -50,6 +51,7 @@ public class ImageHelper {
       if (photoFile != null) {
         takePicIntent.putExtra(MediaStore.EXTRA_OUTPUT,
             Uri.fromFile(photoFile));
+        /* Note: result returned to context - not always the object the ImageHelper is created in */
         activity.startActivityForResult(takePicIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
@@ -86,5 +88,10 @@ public class ImageHelper {
       /* Shows the thumbnail */
       Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
       imgView.setImageBitmap(bmp);
+  }
+
+  public void deleteImage() {
+    Activity activity = (Activity)this.context;
+    activity.deleteFile(mCurrentPhotoPath);
   }
 }

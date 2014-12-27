@@ -5,14 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,18 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.matt.defWeb.R;
-
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 public class AddDefinitionActivity extends Activity {
 
@@ -42,7 +27,7 @@ public class AddDefinitionActivity extends Activity {
     setContentView(R.layout.activity_add_definition);
     if (savedInstanceState == null) {
       getFragmentManager().beginTransaction()
-          .add(R.id.container, new addDefFragment())
+          .add(R.id.container, new addDefFragment(), "fragment_add_def")
           .commit();
     }
   }
@@ -67,23 +52,30 @@ public class AddDefinitionActivity extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      addDefFragment fragment = (addDefFragment) getFragmentManager().findFragmentByTag("fragment_add_def");
+      fragment.onActivityResult(requestCode, resultCode, data);
+  }
+
   /**
    * A placeholder fragment allowing user to add a definition to database
    */
   public static class addDefFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    String mCurrentPhotoPath;
     ImageHelper imageHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-      /* Get add definition button and add on click listener */
+      /* Get buttons and create image helper */
       View rootView = inflater.inflate(R.layout.fragment_add_definition, container, false);
       Button addDefButton = (Button) rootView.findViewById(R.id.button_add_definition);
       Button captureImgButton = (Button) rootView.findViewById(R.id.button_capture_img);
       imageHelper = new ImageHelper(getActivity());
+
+      /* Add on click listener to add button */
       addDefButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -152,9 +144,11 @@ public class AddDefinitionActivity extends Activity {
       }
       );
 
+      /* Add on click listener to capture image button */
         captureImgButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+          ImageView imageViewThumbnail = (ImageView)getActivity().findViewById(R.id.imageView_picture_thumbnail);
           imageHelper.sendTakePicIntent();
         }
       });
@@ -162,9 +156,9 @@ public class AddDefinitionActivity extends Activity {
       return rootView;
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      /* Gets image view to store thumbnail and asks image helper to put the image there */
       ImageView imageViewThumbnail = (ImageView)getActivity().findViewById(R.id.imageView_picture_thumbnail);
       if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
         imageHelper.showThumbnail(imageViewThumbnail);
