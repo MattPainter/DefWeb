@@ -73,9 +73,7 @@ public class AddDefinitionActivity extends Activity {
   public static class addDefFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String mCurrentPhotoPath;
-
-    public addDefFragment() {
-    }
+    ImageHelper imageHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +83,7 @@ public class AddDefinitionActivity extends Activity {
       View rootView = inflater.inflate(R.layout.fragment_add_definition, container, false);
       Button addDefButton = (Button) rootView.findViewById(R.id.button_add_definition);
       Button captureImgButton = (Button) rootView.findViewById(R.id.button_capture_img);
+      imageHelper = new ImageHelper(getActivity());
       addDefButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -156,67 +155,20 @@ public class AddDefinitionActivity extends Activity {
         captureImgButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          /* Recommended method on Google Developer pages for sending intent to capture image */
-          Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-          String defName = ((EditText) getActivity().findViewById(R.id.textview_definition_name))
-              .getText().toString();
-
-          if (takePicIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-              photoFile = createImageFile(defName);
-            } catch (IOException ex) {
-              // Error occurred while creating the File
-              Log.e("DefWeb", "Failed to create image file");
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-              takePicIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                  Uri.fromFile(photoFile));
-              startActivityForResult(takePicIntent, REQUEST_IMAGE_CAPTURE);
-            }
-          }
+          imageHelper.sendTakePicIntent();
         }
       });
 
       return rootView;
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      /* Shows the thumbnail */
-      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-        Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
-        ImageView img = (ImageView) getActivity().findViewById(R.id.imageView_picture_thumbnail);
-        img.setImageBitmap(bmp);
+      ImageView imageViewThumbnail = (ImageView)getActivity().findViewById(R.id.imageView_picture_thumbnail);
+      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
+        imageHelper.showThumbnail(imageViewThumbnail);
       }
-    }
-
-    /* Suggested method for creating an image file */
-    private File createImageFile(String defName) throws IOException {
-      /*
-      Creates file of form:
-      JPEG_(definition name)_(time of image capture)_.jpg
-      * */
-      String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-      String imageFileName = "JPEG_" + defName + "_" + timeStamp + "_";
-      File storageDir = Environment.getExternalStoragePublicDirectory(
-          Environment.DIRECTORY_PICTURES);
-      File image = File.createTempFile(
-          imageFileName,  /* prefix */
-          ".jpg",         /* suffix */
-          storageDir      /* directory */
-      );
-
-      /* Stores a simple path to file */
-      mCurrentPhotoPath = image.getPath();
-
-      TextView textview_img_loc = (TextView)getActivity().findViewById(R.id.textview_img_loc);
-      textview_img_loc.setText(mCurrentPhotoPath);
-
-      return image;
     }
   }
 }
