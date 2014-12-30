@@ -149,6 +149,11 @@ public class Web extends Activity {
           String defName = adapterView.getItemAtPosition(i).toString();
           Definition definition = dataSource.findDefWithName(defName);
 
+          Intent viewIntent = new Intent(getActivity(), ViewImage.class);
+          viewIntent.putExtra("DefName", definition.getDefName());
+          viewIntent.putExtra("ImgLoc", definition.getImgLoc());
+
+          startActivity(viewIntent);
           //TODO: view image here
         }
       });

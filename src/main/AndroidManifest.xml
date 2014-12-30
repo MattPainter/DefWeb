@@ -38,6 +38,10 @@
             android:name=".AddDefinitionActivity"
             android:label="@string/title_activity_add_definition" >
         </activity>
+        <activity
+            android:name=".ViewImage"
+            android:label="@string/title_activity_view_image" >
+        </activity>
     </application>
 
 </manifest>

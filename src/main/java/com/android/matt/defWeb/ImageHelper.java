@@ -89,8 +89,37 @@ public class ImageHelper {
       imgView.setImageBitmap(bmp);
   }
 
+  public void showScaledImage(ImageView imgView) {
+    /* Google recommended method for showing full size bitmap */
+    /* Get image view dims */
+    int width = imgView.getWidth();
+    int height = imgView.getHeight();
+
+    /* Get bitmap dims */
+    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+    bitmapOptions.inJustDecodeBounds = true;
+    BitmapFactory.decodeFile(mCurrentPhotoPath, bitmapOptions);
+    int photoWidth = bitmapOptions.outWidth;
+    int photoHeight = bitmapOptions.outHeight;
+
+    int scaleFactor = Math.min(photoWidth/width, photoHeight/height);
+
+    // Decode the image file into a Bitmap sized to fill the View
+    bitmapOptions.inJustDecodeBounds = false;
+    bitmapOptions.inSampleSize = scaleFactor;
+    bitmapOptions.inPurgeable = true;
+
+    Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath, bitmapOptions);
+    imgView.setImageBitmap(bmp);
+  }
+
   public void deleteImage() {
     Activity activity = (Activity)this.context;
     activity.deleteFile(mCurrentPhotoPath);
+  }
+
+  public void setPath(String imgPath) {
+    //TODO: check no path already
+    mCurrentPhotoPath = imgPath;
   }
 }
