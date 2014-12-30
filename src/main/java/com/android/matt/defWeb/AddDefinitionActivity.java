@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.SQLException;
 
@@ -82,7 +81,7 @@ public class AddDefinitionActivity extends Activity {
         @Override
         public void onClick(View view) {
           /* Get two fields to define definition  */
-          EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
+          //EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
           TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
           /* Finds if you have no image location string */

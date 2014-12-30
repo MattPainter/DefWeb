@@ -9,9 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,8 +55,6 @@ public class ImageHelper {
 
   /* Suggested method for creating an image file */
   private File createImageFile(String defName) throws IOException {
-    Activity activity = (Activity)this.context;
-
       /*
         Creates file of form:
         JPEG_(definition name)_(time of image capture)_.jpg
