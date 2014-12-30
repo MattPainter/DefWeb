@@ -11,43 +11,43 @@ import android.util.Log;
  * http://www.vogella.com/tutorials/AndroidSQLite/article.html
  * and here:
  * https://developer.android.com/guide/topics/data/data-storage.html#db
- *
+ * <p/>
  * Mostly appeals to super class SQLiteOpenHelper
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper{
-    //Define database and table name
-    private static final String DATABASE_NAME = "definitionDatabase.db";
-    public static final String TABLE_NAME = "definitions";
-    //Define column names
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_NAME_TEXT = "name";
-    public static final String COLUMN_IMG_LOC = "img_loc";
+public class DatabaseHelper extends SQLiteOpenHelper {
+  //Define database and table name
+  private static final String DATABASE_NAME = "definitionDatabase.db";
+  public static final String TABLE_NAME = "definitions";
+  //Define column names
+  public static final String COLUMN_ID = "_id";
+  public static final String COLUMN_NAME_TEXT = "name";
+  public static final String COLUMN_IMG_LOC = "img_loc";
 
-    private static final int DATABASE_VERSION = 1;
+  private static final int DATABASE_VERSION = 1;
 
-    private static final String CREATE_DATABASE = "CREATE TABLE " + TABLE_NAME +
-                                           "(" + COLUMN_ID + " integer primary key autoincrement, " +
-                                            COLUMN_NAME_TEXT + " text not null, " +
-                                            COLUMN_IMG_LOC + " text not null);";
+  private static final String CREATE_DATABASE = "CREATE TABLE " + TABLE_NAME +
+      "(" + COLUMN_ID + " integer primary key autoincrement, " +
+      COLUMN_NAME_TEXT + " text not null, " +
+      COLUMN_IMG_LOC + " text not null);";
 
-    public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
+  public DatabaseHelper(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
+  }
 
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_DATABASE);
-    }
+  @Override
+  public void onCreate(SQLiteDatabase sqLiteDatabase) {
+    sqLiteDatabase.execSQL(CREATE_DATABASE);
+  }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        Log.w(DatabaseHelper.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(sqLiteDatabase);
-    }
+  @Override
+  public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+    Log.w(DatabaseHelper.class.getName(),
+        "Upgrading database from version " + oldVersion + " to "
+            + newVersion + ", which will destroy all old data");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+    onCreate(sqLiteDatabase);
+  }
 
   /* Method allows for dropping and recreating of table*/
   public void dropAndRemakeTable(SQLiteDatabase sqLiteDatabase) {

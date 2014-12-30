@@ -32,7 +32,7 @@ public class ImageHelper {
   /* Sends an intent to take a picture stored under the given name and time */
   public void sendTakePicIntent(String defName) {
     Intent takePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    Activity activity = (Activity)this.context;
+    Activity activity = (Activity) this.context;
 
     if (takePicIntent.resolveActivity(activity.getPackageManager()) != null) {
       // Create the File where the photo should go
@@ -81,8 +81,8 @@ public class ImageHelper {
 
   public void showThumbnail(ImageView imgView) {
       /* Shows the thumbnail */
-      Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
-      imgView.setImageBitmap(bmp);
+    Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
+    imgView.setImageBitmap(bmp);
   }
 
   public void showScaledImage(ImageView imgView) {
@@ -98,7 +98,7 @@ public class ImageHelper {
     int photoWidth = bitmapOptions.outWidth;
     int photoHeight = bitmapOptions.outHeight;
 
-    int scaleFactor = Math.min(photoWidth/width, photoHeight/height);
+    int scaleFactor = Math.min(photoWidth / width, photoHeight / height);
 
     // Decode the image file into a Bitmap sized to fill the View
     bitmapOptions.inJustDecodeBounds = false;
@@ -109,13 +109,16 @@ public class ImageHelper {
     imgView.setImageBitmap(bmp);
   }
 
-  public void deleteImage() {
-    Activity activity = (Activity)this.context;
-    activity.deleteFile(mCurrentPhotoPath);
+  public Boolean deleteImage() {
+    if (mCurrentPhotoPath != null) {
+      File f = new File(mCurrentPhotoPath);
+      return f.delete();
+    } else {
+      return false;
+    }
   }
 
   public void setPath(String imgPath) {
-    //TODO: check no path already
     mCurrentPhotoPath = imgPath;
   }
 }

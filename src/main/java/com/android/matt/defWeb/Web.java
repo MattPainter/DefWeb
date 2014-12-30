@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -101,7 +102,8 @@ public class Web extends Activity {
       */
       SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override //submits search via button now searches listview //TODO: refresh DB and then search listview
+        @Override
+        //submits search via button now searches listview //TODO: refresh DB and then search listview
         public boolean onQueryTextSubmit(String query) {
 
           dataSource = new DefDataSource(getActivity());
@@ -131,7 +133,7 @@ public class Web extends Activity {
           arrayAdapter1.addAll(stringList);
           dataSource.close();
           return true;
-           }
+        }
 
         @Override
         public boolean onQueryTextChange(String s) {
@@ -150,7 +152,6 @@ public class Web extends Activity {
           viewIntent.putExtra("ImgLoc", definition.getImgLoc());
 
           startActivity(viewIntent);
-          //TODO: view image here
         }
       });
 
@@ -200,11 +201,28 @@ public class Web extends Activity {
       e.printStackTrace();
     }
 
-    dataSource.dropAndRemakeTable();
+    ImageHelper imageHelper = new ImageHelper(this);
+    List<Definition> defList = dataSource.getAllDefinitions();
 
+    for (Definition d : defList) {
+      imageHelper.setPath((d.getImgLoc()));
+      if (imageHelper.deleteImage() == false) {
+        Toast.makeText(this, "Failed to delete an image file", Toast.LENGTH_SHORT).show();
+      } else {
+        Toast.makeText(this, "It be gone", Toast.LENGTH_SHORT).show();
+      }
+    }
+
+    dataSource.dropAndRemakeTable();
     dataSource.close();
 
     refreshListView();
+  }
+
+  @Override
+  protected void onResume() {
+    refreshListView();
+    super.onResume();
   }
 
   @Override
@@ -213,3 +231,4 @@ public class Web extends Activity {
   }
 
 }
+

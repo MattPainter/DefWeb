@@ -4,22 +4,22 @@
                 android:layout_height="match_parent"
                 tools:context="com.android.matt.defWeb.ViewImage$PlaceholderFragment">
 
-
     <ImageView
         android:contentDescription="Shows image of definition"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imageView_full"
         android:scaleType="fitXY"
-        android:paddingTop="81dp"/>
+        android:paddingTop="80dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:paddingTop="5sp"
+        android:textSize="40sp"
+        android:paddingTop="10sp"
         android:paddingLeft="10sp"
         android:id="@+id/textView_image_name"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
+
 </RelativeLayout>

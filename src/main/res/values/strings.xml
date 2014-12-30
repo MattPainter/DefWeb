@@ -15,8 +15,8 @@
         <item>def 6</item>
     </string-array>
 
-    <string name="title_activity_add_definition">AddDefinitionActivity</string>
+    <string name="title_activity_add_definition">Adding definition</string>
     <string name="title_activity_image_viewer">ImageViewer</string>
-    <string name="title_activity_view_image">ViewImage</string>
+    <string name="title_activity_view_image">Definition</string>
 
 </resources>

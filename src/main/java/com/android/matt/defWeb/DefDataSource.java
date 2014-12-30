@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -118,7 +117,7 @@ public class DefDataSource {
   /* Simple function to query by definition name */
   public Definition findDefWithName(String defName) {
     Cursor cursor = database.query(DatabaseHelper.TABLE_NAME,
-       allColumns , DatabaseHelper.COLUMN_NAME_TEXT + "='" + defName + "'", null, null, null, null);
+        allColumns, DatabaseHelper.COLUMN_NAME_TEXT + "='" + defName + "'", null, null, null, null);
     cursor.moveToFirst();
     return cursorToDef(cursor);
   }

@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 
@@ -30,7 +33,6 @@ public class AddDefinitionActivity extends Activity {
           .commit();
     }
   }
-
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,9 +54,16 @@ public class AddDefinitionActivity extends Activity {
   }
 
   @Override
+  public void onBackPressed() {
+    addDefFragment fragment = (addDefFragment) getFragmentManager().findFragmentByTag("fragment_add_def");
+    fragment.backPressed();
+    super.onBackPressed();
+  }
+
+  @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      addDefFragment fragment = (addDefFragment) getFragmentManager().findFragmentByTag("fragment_add_def");
-      fragment.onActivityResult(requestCode, resultCode, data);
+    addDefFragment fragment = (addDefFragment) getFragmentManager().findFragmentByTag("fragment_add_def");
+    fragment.onActivityResult(requestCode, resultCode, data);
   }
 
   /**
@@ -71,100 +80,141 @@ public class AddDefinitionActivity extends Activity {
       /* Get buttons and create image helper */
       View rootView = inflater.inflate(R.layout.fragment_add_definition, container, false);
       Button addDefButton = (Button) rootView.findViewById(R.id.button_add_definition);
-      Button captureImgButton = (Button) rootView.findViewById(R.id.button_capture_img);
+      final Button captureImgButton = (Button) rootView.findViewById(R.id.button_capture_img);
+      EditText editTextDefName = (EditText) rootView.findViewById(R.id.edit_text_definition_name);
+
       imageHelper = new ImageHelper(getActivity());
 
-      //TODO: stop addition of image to db without first adding def body or pic
+      addDefButton.setEnabled(false);
+      captureImgButton.setEnabled(false);
 
       /* Add on click listener to add button */
       addDefButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+                                        @Override
+                                        public void onClick(View view) {
           /* Get two fields to define definition  */
-          //EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
-          TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
+                                          //EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
+                                          TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
           /* Finds if you have no image location string */
-          if (!defBody.toString().equals("")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Add Definition?")
-                .setMessage("Are you sure you want to add this definition?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int which) {
-                    EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
-                    TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
+                                          if (!defBody.toString().equals("")) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            builder.setTitle("Add Definition?")
+                                                .setMessage("Are you sure you want to add this definition?")
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                  public void onClick(DialogInterface dialog, int which) {
+                                                    EditText defName = (EditText) getActivity().findViewById(R.id.edit_text_definition_name);
+                                                    TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
-                    DefDataSource defDataSource = new DefDataSource(getActivity());
-                    try {
-                      defDataSource.open();
-                    } catch (SQLException e) {
-                      e.printStackTrace();
-                    }
+                                                    DefDataSource defDataSource = new DefDataSource(getActivity());
+                                                    try {
+                                                      defDataSource.open();
+                                                    } catch (SQLException e) {
+                                                      e.printStackTrace();
+                                                    }
 
-                    defDataSource.createDefinition(defName.getText().toString(), defBody.getText().toString());
-                    defDataSource.close();
+                                                    defDataSource.createDefinition(defName.getText().toString(), defBody.getText().toString());
+                                                    defDataSource.close();
 
-                    /* Return to previous activity */
-                    getActivity().finish();
-                  }
-                })
-                .setNegativeButton("No", null)
-                .show();
-          } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Add Definition?")
-                .setMessage("Add definition without picture?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int which) {
-                    EditText defName = (EditText) getActivity().findViewById(R.id.textview_definition_name);
-                    TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
+         /* Return to previous activity */
+                                                    getActivity().finish();
+                                                  }
+                                                })
+                                                .setNegativeButton("No", null)
+                                                .show();
+                                          } else {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            builder.setTitle("Add Definition?")
+                                                .setMessage("Add definition without picture?")
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int which) {
 
-                    DefDataSource defDataSource = new DefDataSource(getActivity());
-                    try {
-                      defDataSource.open();
-                    } catch (SQLException e) {
-                      e.printStackTrace();
-                    }
+        /* Creates a definition in the database */
+                                                    EditText defName = (EditText) getActivity().findViewById(R.id.edit_text_definition_name);
+                                                    TextView defBody = (TextView) getActivity().findViewById(R.id.textview_img_loc);
 
-                    defDataSource.createDefinition(defName.getText().toString(), defBody.getText().toString());
-                    defDataSource.close();
+                                                    DefDataSource defDataSource = new DefDataSource(getActivity());
+                                                    try {
+                                                      defDataSource.open();
+                                                    } catch (SQLException e) {
+                                                      e.printStackTrace();
+                                                    }
 
-                    /* Return to previous activity */
-                    getActivity().finish();
-                  }
-                })
-                .setNegativeButton("No", null)
-                .show();
-          }
+                                                    defDataSource.createDefinition(defName.getText().toString(), defBody.getText().toString());
+                                                    defDataSource.close();
 
-          //TODO: delete picture
-        }
-      }
+        /* Return to previous activity */
+                                                    getActivity().finish();
+                                                  }
+                                                })
+                                                .setNegativeButton("No", null)
+                                                .show();
+                                          }
+                                        }
+                                      }
       );
 
       /* Add on click listener to capture image button */
-        captureImgButton.setOnClickListener(new View.OnClickListener() {
+      captureImgButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          String defName = ((EditText) getActivity().findViewById(R.id.textview_definition_name))
-              .getText().toString();
+          /* Deletes old file if new image is being taken */
+          if (imageHelper.getPhotoPath() != null) {
+            if (imageHelper.deleteImage() == false) {
+              Toast.makeText(getActivity(), "Failed to delete an image file", Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(getActivity(), "It be gone", Toast.LENGTH_SHORT).show();
+            }
+          }
+
+          String defName = ((EditText) getActivity().findViewById(R.id.edit_text_definition_name)).getText().toString();
           imageHelper.sendTakePicIntent(defName);
-              /* Temp stores image loc in text view from here */
-          TextView textview_img_loc = (TextView)getActivity().findViewById(R.id.textview_img_loc);
+
+          /* Temp stores image loc in text view from here */
+          TextView textview_img_loc = (TextView) getActivity().findViewById(R.id.textview_img_loc);
           textview_img_loc.setText(imageHelper.getPhotoPath());
+
+          Button addDefButton = (Button) getActivity().findViewById(R.id.button_add_definition);
+          addDefButton.setEnabled(true);
+        }
+      });
+
+      /* Enables capture image button */
+      editTextDefName.addTextChangedListener(new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+          captureImgButton.setEnabled(true);
         }
       });
 
       return rootView;
     }
 
+    public void backPressed() {
+      /* Tries to delete an un-needed image */
+      if (imageHelper.deleteImage() == false) {
+        Toast.makeText(getActivity(), "Failed to delete an image file", Toast.LENGTH_SHORT).show();
+      } else {
+        Toast.makeText(getActivity(), "It be gone", Toast.LENGTH_SHORT).show();
+      }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
       /* Gets image view to store thumbnail and asks image helper to put the image there */
-      ImageView imageViewThumbnail = (ImageView)getActivity().findViewById(R.id.imageView_picture_thumbnail);
+      ImageView imageViewThumbnail = (ImageView) getActivity().findViewById(R.id.imageView_picture_thumbnail);
       if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
         imageHelper.showThumbnail(imageViewThumbnail);
       }

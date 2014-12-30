@@ -3,9 +3,6 @@ package com.android.matt.defWeb;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
-import com.android.matt.defWeb.DefDataSource;
-import com.android.matt.defWeb.Definition;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,12 +12,12 @@ import java.util.List;
 
 public class ApplicationTest extends ApplicationTestCase<Application> {
   public ApplicationTest() {
-        super(Application.class);
-    }
+    super(Application.class);
+  }
 
   public void testExample() {
-        assertTrue(true);
-    }
+    assertTrue(true);
+  }
 
   public void testOpenDB() {
     com.android.matt.defWeb.DefDataSource defDataSource = new com.android.matt.defWeb.DefDataSource(getContext());
@@ -48,7 +45,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     List<Definition> list = defDataSource.getAllDefinitions();
     for (Definition d : list) {
-      if (definition.getDefName() == d.getDefName() && definition.getImgLoc() == d.getImgLoc()) {
+      if (definition.getDefName().equals(d.getDefName()) && definition.getImgLoc().equals(d.getImgLoc())) {
         assertTrue(true);
         defDataSource.deleteDefinition(dbDefinition);
         defDataSource.close();
